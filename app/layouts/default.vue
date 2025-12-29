@@ -1,7 +1,9 @@
 <template>
   <AppHeader />
   <UMain>
-    <slot />
+    <UContainer>
+      <slot></slot>
+    </UContainer>
   </UMain>
 </template>
 

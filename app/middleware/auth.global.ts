@@ -1,12 +1,19 @@
-import { authClient } from "~/utils/auth.client";
-export default defineNuxtRouteMiddleware(async (to) => {
-  const { data: session } = await authClient.useSession(useFetch);
+import { useAuthStore } from "~/stores/auth";
 
-  if (!session.value && to.path.startsWith("/auth") === false) {
+export default defineNuxtRouteMiddleware(async (to) => {
+  const authStore = useAuthStore();
+
+  if (!authStore.session) {
+    await authStore.fetchSession();
+  }
+
+  const session = authStore.session;
+
+  if (!session && to.path.startsWith("/auth") === false) {
     return navigateTo("/auth");
   }
 
-  if (session.value && to.path === "/auth") {
+  if (session && to.path === "/auth") {
     return navigateTo("/");
   }
 });

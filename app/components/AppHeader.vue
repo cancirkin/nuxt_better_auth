@@ -27,6 +27,10 @@
         />
       </UTooltip>
     </template>
+
+    <template #body>
+      <UNavigationMenu :items="headerItems" orientation="vertical" />
+    </template>
   </UHeader>
 </template>
 
@@ -50,19 +54,19 @@ const headerItems = computed<NavigationMenuItem[]>(() => [
     active: route.path === "/",
   },
   {
-    label: "Profile",
-    to: "/profile",
-    active: route.path.startsWith("/profile"),
+    label: "Sessions",
+    to: "/sessions",
+    active: route.path.startsWith("/sessions"),
   },
-  //   {
-  //     label: "Releases",
-  //     to: "https://github.com/nuxt/ui/releases",
-  //     target: "_blank",
-  //   },
 ]);
 
-const logout = () => {
-  authClient.signOut();
-  navigateTo("/auth");
+const logout = async () => {
+  await authClient.signOut({
+    fetchOptions: {
+      onSuccess: () => {
+        window.location.reload();
+      },
+    },
+  });
 };
 </script>
