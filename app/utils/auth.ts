@@ -1,4 +1,5 @@
 import { betterAuth } from "better-auth";
+import { twoFactor } from "better-auth/plugins/two-factor";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@/drizzle/db"; // your drizzle instance
 import { sendPasswordResetEmail as sendResetEmail } from "./emails/sendPasswordResetEmail";
@@ -35,7 +36,7 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     },
   },
-  plugins: [],
+  plugins: [twoFactor()],
   database: drizzleAdapter(db, {
     provider: "pg",
   }),

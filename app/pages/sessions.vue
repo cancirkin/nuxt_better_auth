@@ -11,7 +11,7 @@
             icon="i-lucide-shield-close"
             @click="endAllSessions"
             size="sm"
-            >End All Session</UButton
+            >End All Sessions</UButton
           >
         </div>
       </div>

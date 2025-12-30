@@ -1,2 +1,5 @@
 import { createAuthClient } from "better-auth/vue";
-export const authClient = createAuthClient();
+import { twoFactorClient } from "better-auth/client/plugins";
+export const authClient = createAuthClient({
+  plugins: [twoFactorClient()],
+});
