@@ -3,7 +3,11 @@
     <UPageBody>
       <UPageCard
         v-if="hasCredentialAccount"
-        description="For activating 2fa authentication you need the enter your password."
+        :description="
+          showBackupCodes
+            ? ''
+            : 'For activating 2fa authentication you need the enter your password.'
+        "
         variant="subtle"
         title="2FA Authentication"
       >
@@ -29,7 +33,7 @@
             <UInput
               class="w-100"
               v-model="state.password"
-              :type="show ? 'text' : 'password'"
+              :type="showPassword ? 'text' : 'password'"
               :ui="{ trailing: 'pe-1' }"
             >
               <template #trailing>
@@ -37,11 +41,11 @@
                   color="neutral"
                   variant="link"
                   size="sm"
-                  :icon="show ? 'i-lucide-eye-off' : 'i-lucide-eye'"
-                  :aria-label="show ? 'Hide password' : 'Show password'"
-                  :aria-pressed="show"
+                  :icon="showPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                  :aria-label="showPassword ? 'Hide password' : 'Show password'"
+                  :aria-pressed="showPassword"
                   aria-controls="password"
-                  @click="show = !show"
+                  @click="showPassword = !showPassword"
                 />
               </template>
             </UInput>
@@ -56,10 +60,37 @@
           </UButton>
         </UForm>
         <SecurityQrCode
-          v-else
+          v-else-if="twoFactorData && !showBackupCodes"
           :totpURI="twoFactorData.totpURI"
           @submit-token="onQrCodeSubmit"
         ></SecurityQrCode>
+        <div v-else>
+          <div class="font-bold">Backup Codes</div>
+          <div class="text-sm text-toned">
+            Save these backup codes in a safe place. You can use them to access
+            your account if you lose access to your authenticator app.
+          </div>
+
+          <div class="mb-4">
+            <ul
+              class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1 mt-4 list-disc list-inside"
+            >
+              <li v-for="code in twoFactorData.backupCodes" :key="code">
+                <code class="font-mono text-lg">{{ code }}</code>
+              </li>
+            </ul>
+          </div>
+          <UButton
+            color="primary"
+            @click="
+              () => {
+                showBackupCodes = false;
+                twoFactorData = null;
+              }
+            "
+            >Done</UButton
+          >
+        </div>
       </UPageCard>
     </UPageBody>
   </UPage>
@@ -78,7 +109,8 @@ type TwoFactorData = {
   backupCodes: string[];
 };
 const twoFactorData = ref<TwoFactorData | null>(null);
-const show = ref(false);
+const showPassword = ref(false);
+const showBackupCodes = ref(false);
 const loading = ref(false);
 const schema = z.object({
   password: z
@@ -142,7 +174,7 @@ const onEnable2Fa = async (data: Schema) => {
 };
 
 const onDisable2Fa = async (data: Schema) => {
-  const result = await authClient.twoFactor.disable(
+  await authClient.twoFactor.disable(
     {
       password: data.password,
     },
@@ -180,7 +212,7 @@ const onQrCodeSubmit = async (token: string) => {
             "Two-factor authentication has been enabled on your account.",
           icon: "i-lucide-check-circle",
         });
-        twoFactorData.value = null;
+        showBackupCodes.value = true;
         store.fetchSession();
       },
       onError: (error) => {
