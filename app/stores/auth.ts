@@ -11,9 +11,15 @@ export const useAuthStore = defineStore("auth", {
     async fetchSession() {
       this.loading = true;
       try {
-        const { data } = await authClient.useSession(useFetch);
-        this.session = data.value?.session;
-        this.user = data.value?.user || null;
+        if (import.meta.server) {
+          const { data } = await authClient.useSession(useFetch);
+          this.session = data.value?.session;
+          this.user = data.value?.user || null;
+        } else {
+          const { data } = await authClient.getSession();
+          this.session = data?.session;
+          this.user = data?.user || null;
+        }
       } catch (error) {
         this.session = null;
         this.user = null;

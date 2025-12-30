@@ -58,6 +58,11 @@ const headerItems = computed<NavigationMenuItem[]>(() => [
     to: "/sessions",
     active: route.path.startsWith("/sessions"),
   },
+  {
+    label: "Security",
+    to: "/security",
+    active: route.path.startsWith("/security"),
+  },
 ]);
 
 const logout = async () => {
