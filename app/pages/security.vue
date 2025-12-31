@@ -10,9 +10,13 @@
         "
         variant="subtle"
         title="2FA Authentication"
+        :ui="{
+          description: 'text-sm',
+        }"
+        class="max-w-md mx-auto"
       >
         <template #title>
-          <div class="flex align-center gap-2">
+          <div class="flex align-center justify-between gap-2 mb-2">
             <span>2FA Authentication</span>
             <UBadge
               variant="subtle"
@@ -31,10 +35,10 @@
         >
           <UFormField label="Password" name="password">
             <UInput
-              class="w-100"
               v-model="state.password"
               :type="showPassword ? 'text' : 'password'"
               :ui="{ trailing: 'pe-1' }"
+              class="w-full"
             >
               <template #trailing>
                 <UButton
@@ -55,6 +59,7 @@
             :color="is2FaEnabled ? 'error' : 'primary'"
             :loading="loading"
             type="submit"
+            block
           >
             {{ is2FaEnabled ? "Disable 2FA" : "Enable 2FA" }}
           </UButton>

@@ -6,7 +6,7 @@
     @submit="onTokenSubmit"
   >
     <UFormField label="Code" name="token">
-      <UInput class="w-100" v-model="state.token" :ui="{ trailing: 'pe-1' }">
+      <UInput class="w-full" v-model="state.token" :ui="{ trailing: 'pe-1' }">
       </UInput>
     </UFormField>
 
