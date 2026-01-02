@@ -7,7 +7,13 @@
       <div v-else-if="activeTab === 'forgot'">
         <AuthForgotPassword @open-login-tab="activeTab = 'login'" />
       </div>
-      <UTabs v-else v-model="activeTab" :items="tabItems" class="w-full">
+      <UTabs
+        v-else
+        v-model="activeTab"
+        :items="tabItems"
+        class="w-full"
+        :ui="{ root: 'mb-0' }"
+      >
         <template #login>
           <AuthLoginForm @open-forgot-tab="openForgotTab" />
         </template>

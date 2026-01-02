@@ -7,11 +7,17 @@
     :fields="fields"
     :providers="providers"
     @submit="onSubmit"
+    :ui="{
+      root: 'space-y-3',
+    }"
   >
     <template #footer>
-      <UButton @click="onForgotPasswordClick" variant="link"
-        >Forgot Password?</UButton
-      >
+      <div class="flex flex-col justify-center items-center gap-2">
+        <AuthPasskeyButton />
+        <UButton @click="onForgotPasswordClick" variant="link"
+          >Forgot Password?</UButton
+        >
+      </div>
     </template>
   </UAuthForm>
 </template>
